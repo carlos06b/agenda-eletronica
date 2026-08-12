@@ -71,7 +71,11 @@ export default function ActivityForm({ aberto, atividade, onFechar, onSalvar }) 
     setSalvando(true);
 
     try {
-      await onSalvar(form);
+      await onSalvar({
+        ...form,
+        dataInicio: new Date(form.dataInicio).toISOString(),
+        dataFim: new Date(form.dataFim).toISOString()
+      });
     } catch (e) {
       setErro(e.response?.data?.erro || 'Nao foi possivel salvar');
     } finally {
