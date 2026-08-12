@@ -84,6 +84,8 @@ npm run dev
 
 Abre em `http://localhost:5173`. O `baseURL` da API esta fixo em `frontend/src/services/api.js`, entao se o backend rodar em outra porta/host e preciso ajustar la.
 
+Rotas da SPA: `/login`, `/cadastro` e `/agenda` (privada, exige login; qualquer outro caminho redireciona pra ela).
+
 ## API
 
 Rotas publicas:
@@ -105,6 +107,8 @@ Rotas de atividades (exigem header `Authorization: Bearer <token>`):
 | DELETE | `/atividades/:id`         | remove uma atividade        |
 
 Status possiveis: `pendente`, `concluida`, `cancelada`.
+
+O modelo `Activity` usa soft delete (`paranoid: true`): o `DELETE` marca a coluna `deleted_at` em vez de apagar a linha de fato.
 
 ## Scripts
 

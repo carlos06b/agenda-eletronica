@@ -12,11 +12,12 @@ import Navbar from '../components/Navbar';
 import ActivityForm from '../components/ActivityForm';
 import ActivityList from '../components/ActivityList';
 import CalendarView from '../components/CalendarView';
+import { STATUS } from '../components/statusInfo';
 
 const CARTOES_STATUS = [
-  { chave: 'pendente', rotulo: 'Pendentes', icone: PendingRoundedIcon, cor: '#b7791f', fundo: '#fbf1e2' },
-  { chave: 'concluida', rotulo: 'Concluidas', icone: CheckCircleRoundedIcon, cor: '#2e7d46', fundo: '#e7f4ea' },
-  { chave: 'cancelada', rotulo: 'Canceladas', icone: CancelRoundedIcon, cor: '#7c877f', fundo: '#eef0ec' }
+  { chave: 'pendente', rotulo: 'Pendentes', icone: PendingRoundedIcon },
+  { chave: 'concluida', rotulo: 'Concluidas', icone: CheckCircleRoundedIcon },
+  { chave: 'cancelada', rotulo: 'Canceladas', icone: CancelRoundedIcon }
 ];
 
 export default function Agenda() {
@@ -123,7 +124,7 @@ export default function Agenda() {
         </Box>
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3.5 }}>
-          {CARTOES_STATUS.map(({ chave, rotulo, icone: Icone, cor, fundo }) => (
+          {CARTOES_STATUS.map(({ chave, rotulo, icone: Icone }) => (
             <Paper key={chave} sx={{ flex: 1, p: 2, display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Box
                 sx={{
@@ -133,8 +134,8 @@ export default function Agenda() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: fundo,
-                  color: cor,
+                  backgroundColor: STATUS[chave].corFundo,
+                  color: STATUS[chave].corHex,
                   flexShrink: 0
                 }}
               >
@@ -172,7 +173,7 @@ export default function Agenda() {
             '& .Mui-selected': {
               backgroundColor: 'background.paper',
               color: 'text.primary',
-              boxShadow: '0 1px 2px rgba(28,35,33,0.08)'
+              boxShadow: (theme) => theme.shadows[1]
             }
           }}
         >
