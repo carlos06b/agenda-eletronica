@@ -32,7 +32,8 @@ const Activity = sequelize.define(
     }
   },
   {
-    tableName: 'atividades'
+    tableName: 'atividades',
+    paranoid: true
   }
 );
 

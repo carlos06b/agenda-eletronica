@@ -1,7 +1,25 @@
 export const STATUS = {
-  pendente: { rotulo: 'Pendente', cor: 'warning', corHex: '#ed6c02' },
-  concluida: { rotulo: 'Concluida', cor: 'success', corHex: '#2e7d32' },
-  cancelada: { rotulo: 'Cancelada', cor: 'default', corHex: '#9e9e9e' }
+  pendente: {
+    rotulo: 'Pendente',
+    cor: 'warning',
+    corHex: '#b7791f',
+    corTexto: '#8a5a12',
+    corFundo: '#fbf1e2'
+  },
+  concluida: {
+    rotulo: 'Concluida',
+    cor: 'success',
+    corHex: '#2e7d46',
+    corTexto: '#1f6136',
+    corFundo: '#e7f4ea'
+  },
+  cancelada: {
+    rotulo: 'Cancelada',
+    cor: 'default',
+    corHex: '#7c877f',
+    corTexto: '#5f6b67',
+    corFundo: '#eef0ec'
+  }
 };
 
 export function paraInputDateTime(valor) {

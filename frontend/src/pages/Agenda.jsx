@@ -1,22 +1,32 @@
-import { useEffect, useState } from 'react';
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Snackbar,
-  Typography
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { useEffect, useMemo, useState } from 'react';
+import { Box, Button, Container, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import PendingRoundedIcon from '@mui/icons-material/PendingRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import api from '../services/api';
 import Navbar from '../components/Navbar';
+import ActivityForm from '../components/ActivityForm';
 import ActivityList from '../components/ActivityList';
+import CalendarView from '../components/CalendarView';
+
+const CARTOES_STATUS = [
+  { chave: 'pendente', rotulo: 'Pendentes', icone: PendingRoundedIcon, cor: '#b7791f', fundo: '#fbf1e2' },
+  { chave: 'concluida', rotulo: 'Concluidas', icone: CheckCircleRoundedIcon, cor: '#2e7d46', fundo: '#e7f4ea' },
+  { chave: 'cancelada', rotulo: 'Canceladas', icone: CancelRoundedIcon, cor: '#7c877f', fundo: '#eef0ec' }
+];
 
 export default function Agenda() {
   const [atividades, setAtividades] = useState([]);
-  const [mensagem, setMensagem] = useState('');
-  const [erro, setErro] = useState('');
+  const [aba, setAba] = useState(0);
+  const [formAberto, setFormAberto] = useState(false);
+  const [atividadeSelecionada, setAtividadeSelecionada] = useState(null);
+
+  const { enqueueSnackbar } = useSnackbar();
+  const confirm = useConfirm();
 
   useEffect(() => {
     carregarAtividades();
@@ -27,86 +37,168 @@ export default function Agenda() {
       const resposta = await api.get('/atividades');
       setAtividades(resposta.data);
     } catch (e) {
-      setErro('Erro ao carregar as atividades');
+      enqueueSnackbar('Erro ao carregar as atividades', { variant: 'error' });
     }
+  }
+
+  function abrirNova() {
+    setAtividadeSelecionada(null);
+    setFormAberto(true);
+  }
+
+  function abrirEdicao(atividade) {
+    setAtividadeSelecionada(atividade);
+    setFormAberto(true);
+  }
+
+  async function salvarAtividade(dados) {
+    if (atividadeSelecionada) {
+      await api.put(`/atividades/${atividadeSelecionada.id}`, dados);
+      enqueueSnackbar('Atividade atualizada', { variant: 'success' });
+    } else {
+      await api.post('/atividades', dados);
+      enqueueSnackbar('Atividade criada', { variant: 'success' });
+    }
+
+    setFormAberto(false);
+    carregarAtividades();
   }
 
   async function alterarStatus(atividade, status) {
     try {
       await api.patch(`/atividades/${atividade.id}/status`, { status });
-      setMensagem('Status atualizado');
+      enqueueSnackbar('Status atualizado', { variant: 'success' });
       carregarAtividades();
     } catch (e) {
-      setErro('Erro ao alterar o status');
+      enqueueSnackbar('Erro ao alterar o status', { variant: 'error' });
     }
   }
 
   async function excluirAtividade(atividade) {
-    const confirmou = window.confirm(`Excluir a atividade "${atividade.nome}"?`);
+    const { confirmed } = await confirm({
+      title: 'Excluir atividade',
+      description: `Tem certeza que deseja excluir "${atividade.nome}"? Essa acao nao pode ser desfeita.`,
+      confirmationText: 'Excluir',
+      confirmationButtonProps: { color: 'error' }
+    });
 
-    if (!confirmou) return;
+    if (!confirmed) return;
 
     try {
       await api.delete(`/atividades/${atividade.id}`);
-      setMensagem('Atividade excluida');
+      enqueueSnackbar('Atividade excluida', { variant: 'success' });
       carregarAtividades();
     } catch (e) {
-      setErro('Erro ao excluir a atividade');
+      enqueueSnackbar('Erro ao excluir a atividade', { variant: 'error' });
     }
   }
 
-  function abrirEdicao(atividade) {
-    console.log('editar', atividade);
-  }
+  const contagens = useMemo(() => {
+    return atividades.reduce(
+      (acc, atividade) => {
+        acc[atividade.status] = (acc[atividade.status] || 0) + 1;
+        return acc;
+      },
+      { pendente: 0, concluida: 0, cancelada: 0 }
+    );
+  }, [atividades]);
 
   return (
     <>
       <Navbar />
 
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: 2
-          }}
-        >
-          <Typography variant="h5">Minhas atividades</Typography>
-          <Button variant="contained" startIcon={<AddIcon />}>
+      <Container maxWidth="lg" sx={{ py: 5 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 3.5, flexWrap: 'wrap', gap: 2 }}>
+          <Box>
+            <Typography variant="h5">Minhas atividades</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              {atividades.length === 0
+                ? 'Nenhuma atividade cadastrada ainda'
+                : `${atividades.length} atividade${atividades.length > 1 ? 's' : ''} no total`}
+            </Typography>
+          </Box>
+          <Button variant="contained" startIcon={<AddRoundedIcon />} onClick={abrirNova}>
             Nova atividade
           </Button>
         </Box>
 
-        <ActivityList
-          atividades={atividades}
-          onEditar={abrirEdicao}
-          onExcluir={excluirAtividade}
-          onAlterarStatus={alterarStatus}
-        />
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3.5 }}>
+          {CARTOES_STATUS.map(({ chave, rotulo, icone: Icone, cor, fundo }) => (
+            <Paper key={chave} sx={{ flex: 1, p: 2, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: fundo,
+                  color: cor,
+                  flexShrink: 0
+                }}
+              >
+                <Icone sx={{ fontSize: 22 }} />
+              </Box>
+              <Box>
+                <Typography variant="h6" sx={{ lineHeight: 1.1 }}>
+                  {contagens[chave]}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {rotulo}
+                </Typography>
+              </Box>
+            </Paper>
+          ))}
+        </Stack>
+
+        <Tabs
+          value={aba}
+          onChange={(e, valor) => setAba(valor)}
+          slotProps={{ indicator: { sx: { display: 'none' } } }}
+          sx={{
+            mb: 3,
+            minHeight: 40,
+            backgroundColor: 'grey.100',
+            borderRadius: '10px',
+            p: 0.5,
+            width: 'fit-content',
+            '& .MuiTab-root': {
+              minHeight: 34,
+              borderRadius: '8px',
+              px: 2.5,
+              color: 'text.secondary'
+            },
+            '& .Mui-selected': {
+              backgroundColor: 'background.paper',
+              color: 'text.primary',
+              boxShadow: '0 1px 2px rgba(28,35,33,0.08)'
+            }
+          }}
+        >
+          <Tab label="Calendario" disableRipple />
+          <Tab label="Lista" disableRipple />
+        </Tabs>
+
+        {aba === 0 ? (
+          <CalendarView atividades={atividades} onSelecionar={abrirEdicao} />
+        ) : (
+          <ActivityList
+            atividades={atividades}
+            onEditar={abrirEdicao}
+            onExcluir={excluirAtividade}
+            onAlterarStatus={alterarStatus}
+            onNova={abrirNova}
+          />
+        )}
       </Container>
 
-      <Snackbar
-        open={!!mensagem}
-        autoHideDuration={3000}
-        onClose={() => setMensagem('')}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity="success" onClose={() => setMensagem('')}>
-          {mensagem}
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={!!erro}
-        autoHideDuration={4000}
-        onClose={() => setErro('')}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity="error" onClose={() => setErro('')}>
-          {erro}
-        </Alert>
-      </Snackbar>
+      <ActivityForm
+        aberto={formAberto}
+        atividade={atividadeSelecionada}
+        onFechar={() => setFormAberto(false)}
+        onSalvar={salvarAtividade}
+      />
     </>
   );
 }

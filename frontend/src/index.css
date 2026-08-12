@@ -1,15 +1,123 @@
 body {
   margin: 0;
-  background-color: #f5f6f8;
+  background-color: #f4f5f3;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9cec8 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #c9cec8;
+  border-radius: 8px;
 }
 
 .rbc-calendar {
-  height: 600px;
-  font-family: Roboto, Arial, sans-serif;
+  height: 640px;
+  font-family: 'Inter', Roboto, Arial, sans-serif;
+  font-size: 13.5px;
+  color: #1c2321;
+}
+
+.rbc-toolbar {
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.rbc-toolbar button {
+  color: #1c2321;
+  border: 1px solid #dde1dc;
+  border-radius: 8px !important;
+  padding: 6px 12px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #f7f8f6;
+  border-color: #c9cec8;
+  color: #1c2321;
+}
+
+.rbc-toolbar button:focus {
+  outline: none;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: #245a52;
+  border-color: #245a52;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.rbc-toolbar button.rbc-active:hover {
+  background-color: #173f39;
+  border-color: #173f39;
+}
+
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+  border: 1px solid #e2e5e1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rbc-header {
+  padding: 10px 4px;
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5f6b67;
+  border-color: #e2e5e1;
+  background-color: #f7f8f6;
+}
+
+.rbc-month-row,
+.rbc-day-bg,
+.rbc-time-content,
+.rbc-time-header-content,
+.rbc-timeslot-group {
+  border-color: #eceeea;
+}
+
+.rbc-off-range-bg {
+  background-color: #f9faf8;
+}
+
+.rbc-today {
+  background-color: #eef4f2;
 }
 
 .rbc-event {
   border: none;
-  padding: 2px 5px;
-  font-size: 13px;
+  padding: 2px 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.rbc-event.rbc-selected {
+  box-shadow: 0 0 0 2px rgba(36, 90, 82, 0.4);
+}
+
+.rbc-show-more {
+  color: #245a52;
+  font-weight: 600;
 }

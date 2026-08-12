@@ -1,17 +1,9 @@
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Link,
-  Paper,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Alert, Box, Button, Link, TextField, Typography } from '@mui/material';
 
 import { useAuth } from '../contexts/AuthContext';
+import AuthLayout from '../components/AuthLayout';
 
 export default function Cadastro() {
   const [login, setLogin] = useState('');
@@ -36,7 +28,7 @@ export default function Cadastro() {
 
     try {
       await cadastrar(login, senha);
-      navigate('/agenda');
+      navigate('/agenda', { replace: true });
     } catch (e) {
       setErro(e.response?.data?.erro || 'Nao foi possivel cadastrar');
     } finally {
@@ -45,56 +37,70 @@ export default function Cadastro() {
   }
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 10 }}>
-      <Paper sx={{ p: 4 }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Criar conta
-        </Typography>
-
-        {erro && <Alert severity="error" sx={{ mb: 2 }}>{erro}</Alert>}
-
-        <Box component="form" onSubmit={handleSubmit}>
-          <TextField
-            label="Login"
-            fullWidth
-            margin="normal"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-          />
-          <TextField
-            label="Senha"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
-          <TextField
-            label="Confirmar senha"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={confirmacao}
-            onChange={(e) => setConfirmacao(e.target.value)}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mt: 3 }}
-            disabled={carregando}
-          >
-            {carregando ? 'Cadastrando...' : 'Cadastrar'}
-          </Button>
-        </Box>
-
-        <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+    <AuthLayout
+      titulo="Crie sua conta"
+      subtitulo="Leva menos de um minuto"
+      rodape={
+        <>
           Ja tem conta?{' '}
-          <Link component={RouterLink} to="/login">
+          <Link component={RouterLink} to="/login" underline="hover" sx={{ fontWeight: 600 }}>
             Entrar
           </Link>
+        </>
+      }
+    >
+      {erro && (
+        <Alert severity="error" sx={{ mb: 2.5 }}>
+          {erro}
+        </Alert>
+      )}
+
+      <Box component="form" onSubmit={handleSubmit}>
+        <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
+          Login
         </Typography>
-      </Paper>
-    </Container>
+        <TextField
+          fullWidth
+          placeholder="Escolha um usuario"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+
+        <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
+          Senha
+        </Typography>
+        <TextField
+          type="password"
+          fullWidth
+          placeholder="********"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+
+        <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
+          Confirmar senha
+        </Typography>
+        <TextField
+          type="password"
+          fullWidth
+          placeholder="********"
+          value={confirmacao}
+          onChange={(e) => setConfirmacao(e.target.value)}
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          size="large"
+          sx={{ mt: 3.5 }}
+          disabled={carregando}
+        >
+          {carregando ? 'Cadastrando...' : 'Criar conta'}
+        </Button>
+      </Box>
+    </AuthLayout>
   );
 }
