@@ -1,13 +1,13 @@
 body {
   margin: 0;
-  background-color: #f4f5f3;
+  background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #c9cec8 transparent;
+  scrollbar-color: #c7d0c7 transparent;
 }
 
 *::-webkit-scrollbar {
@@ -16,7 +16,7 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #c9cec8;
+  background-color: #c7d0c7;
   border-radius: 8px;
 }
 
@@ -24,7 +24,7 @@ body {
   height: 640px;
   font-family: 'Inter', Roboto, Arial, sans-serif;
   font-size: 13.5px;
-  color: #1c2321;
+  color: #182620;
 }
 
 .rbc-toolbar {
@@ -40,8 +40,8 @@ body {
 }
 
 .rbc-toolbar button {
-  color: #1c2321;
-  border: 1px solid #dde1dc;
+  color: #182620;
+  border: 1px solid #d3dbd3;
   border-radius: 8px !important;
   padding: 6px 12px;
   font-weight: 500;
@@ -49,9 +49,9 @@ body {
 }
 
 .rbc-toolbar button:hover {
-  background-color: #f7f8f6;
-  border-color: #c9cec8;
-  color: #1c2321;
+  background-color: #f7f9f7;
+  border-color: #c7d0c7;
+  color: #182620;
 }
 
 .rbc-toolbar button:focus {
@@ -59,21 +59,21 @@ body {
 }
 
 .rbc-toolbar button.rbc-active {
-  background-color: #245a52;
-  border-color: #245a52;
+  background-color: #e2711d;
+  border-color: #e2711d;
   color: #ffffff;
   box-shadow: none;
 }
 
 .rbc-toolbar button.rbc-active:hover {
-  background-color: #173f39;
-  border-color: #173f39;
+  background-color: #b3570f;
+  border-color: #b3570f;
 }
 
 .rbc-month-view,
 .rbc-time-view,
 .rbc-agenda-view {
-  border: 1px solid #e2e5e1;
+  border: 1px solid #e1e6e1;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -84,9 +84,9 @@ body {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #5f6b67;
-  border-color: #e2e5e1;
-  background-color: #f7f8f6;
+  color: #5f6b64;
+  border-color: #e1e6e1;
+  background-color: #f7f9f7;
 }
 
 .rbc-month-row,
@@ -94,15 +94,15 @@ body {
 .rbc-time-content,
 .rbc-time-header-content,
 .rbc-timeslot-group {
-  border-color: #eceeea;
+  border-color: #e6ebe6;
 }
 
 .rbc-off-range-bg {
-  background-color: #f9faf8;
+  background-color: #fafcfa;
 }
 
 .rbc-today {
-  background-color: #eef4f2;
+  background-color: #eaf5ef;
 }
 
 .rbc-event {
@@ -114,10 +114,10 @@ body {
 }
 
 .rbc-event.rbc-selected {
-  box-shadow: 0 0 0 2px rgba(36, 90, 82, 0.4);
+  box-shadow: 0 0 0 2px rgba(27, 94, 63, 0.4);
 }
 
 .rbc-show-more {
-  color: #245a52;
+  color: #1b5e3f;
   font-weight: 600;
 }

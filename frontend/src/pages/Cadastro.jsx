@@ -39,7 +39,7 @@ export default function Cadastro() {
   return (
     <AuthLayout
       titulo="Crie sua conta"
-      subtitulo="Leva menos de um minuto"
+      subtitulo="Preencha os dados"
       rodape={
         <>
           Ja tem conta?{' '}
